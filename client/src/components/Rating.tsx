@@ -4,12 +4,30 @@ import axios from "axios";
 
 const Wrapper = styled.div`
   width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-block: 3rem;
+  gap: 1.5rem;
   line-height: 1.5;
   background: hsl(213, 19%, 18%);
   border-radius: 20px;
-  padding: 1.5em 3em;
+  margin: 1em auto;
+  padding: 3em 2em;
   color: hsl(217, 12%, 63%);
-  h1 {
+  img {
+    width: 50%;
+  }
+  span {
+    display: block;
+    background: hsl(215, 19%, 30%);
+    color: hsl(25, 97%, 53%);
+    width: fit-content;
+    padding-inline: 0.9em;
+    border-radius: 100vmax;
+  }
+  h2 {
     color: white;
   }
   p {
@@ -61,50 +79,71 @@ const Wrapper = styled.div`
   }
 `;
 
+interface IBody {
+  score: number;
+}
+
 function Rating() {
   const arr = [1, 2, 3, 4, 5];
   const [scoreValue, setScoreValue] = useState(0);
+  const [isSent, setIsSent] = useState(false);
   function submit() {
-    const body: number = scoreValue;
-    axios.get("/api/rating", body).then((res) => console.log(res.data.score));
+    const body: IBody = { score: scoreValue };
+    axios
+      .post("/api/rating", body)
+      .then((res) => console.log(res.data.score))
+      .catch((err) => console.log(err));
+    setIsSent(true);
   }
   return (
     <>
-      <Wrapper>
-        <div className="circle">
-          <img src="./images/star.png" alt="" />
-        </div>
-        <p></p>
-        <h1>How did we do?</h1>
-        <p>
-          Please let us know how we did with your support request. All feedback
-          is appreciated to help us improve our offering
-        </p>
-        <div className="circle-wrapper">
-          {arr.map((score, idx) => {
-            return (
-              <div key={idx}>
-                <input
-                  id={`rating${idx}`}
-                  value={score}
-                  type="radio"
-                  name="rating"
-                />
-                <label
-                  htmlFor={`rating${idx}`}
-                  className="circle"
-                  onClick={() => {
-                    setScoreValue(score);
-                  }}
-                >
-                  {score}
-                </label>
-              </div>
-            );
-          })}
-        </div>
-        <button onClick={submit}>SUBMIT</button>
-      </Wrapper>
+      {isSent ? (
+        <Wrapper>
+          <img src="./images/thankyou.svg" alt="" />
+          <span>You Selected {scoreValue} out of 5</span>
+          <h2>Thank you!</h2>
+          <p>
+            We appreciate you taking the time to give a rating. if you ever need
+            more support. don't hesitate to get in touch!
+          </p>
+        </Wrapper>
+      ) : (
+        <Wrapper>
+          <div className="circle">
+            <img src="./images/star.png" alt="" />
+          </div>
+          <p></p>
+          <h2>How did we do?</h2>
+          <p>
+            Please let us know how we did with your support request. All
+            feedback is appreciated to help us improve our offering
+          </p>
+          <div className="circle-wrapper">
+            {arr.map((score, idx) => {
+              return (
+                <div key={idx}>
+                  <input
+                    id={`rating${idx}`}
+                    value={score}
+                    type="radio"
+                    name="rating"
+                  />
+                  <label
+                    htmlFor={`rating${idx}`}
+                    className="circle"
+                    onClick={() => {
+                      setScoreValue(score);
+                    }}
+                  >
+                    {score}
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+          <button onClick={submit}>SUBMIT</button>
+        </Wrapper>
+      )}
     </>
   );
 }

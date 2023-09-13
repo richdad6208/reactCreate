@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/node-sass": "^4.11.4",
+    "node-sass": "^9.0.0"
+  }
+}
