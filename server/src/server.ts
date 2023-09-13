@@ -11,8 +11,9 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
-app.get("/api", (req: Request, res: Response) => {
-  res.status(200).json({ success: true, jaesung: "success" });
+app.get("/api/rating", (req: Request, res: Response) => {
+  const { score } = req.body;
+  res.status(200).json({ success: true, score: score });
 });
 
 app.listen(port, () => {
